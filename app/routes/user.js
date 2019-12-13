@@ -22,7 +22,7 @@ route.get('/user', async (req, res, next) => {
 
 route.post('/user', async (req, res, next) => {
     const name = { username: req.body.name }
-    
+
     var x = await db.collection('users')
         .findOne(name);
     if (!x) {
@@ -53,9 +53,9 @@ route.put('/user', async (req, res, next) => {
             }
         );
     }
-    if (!x) return res.status(404).json({ result: 'not found' });
+    if (!x) return res.status(404).json({ result: `user \'${user.username}\' not exist` });
 
-    res.status(200).json({ "result": `user \'${user.username}\' updated to \'${changeUser.changeUser}\'` });
+    res.status(200).json({ "result": `user \'${user.username}\' changed to \'${changeUser.changeUser}\'` });
 });
 
 route.delete('/user', async (req, res, next) => {
