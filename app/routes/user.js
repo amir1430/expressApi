@@ -22,12 +22,15 @@ route.get('/user', async (req, res, next) => {
 
 route.post('/user', async (req, res, next) => {
     const name = { username: req.body.name }
-    console.log(name);
-
+    
     var x = await db.collection('users')
-        .insertOne(name);
-    console.log(x);
-    if (!x) return res.status(404).json({ result: 'not found' });
+        .findOne(name);
+    if (!x) {
+        await db.collection('users')
+            .insertOne(name);
+    }
+
+    if (x) return res.status(404).json({ result: `user ${name.username} exist` });
 
     res.status(201).json({ "result": 'user add :)' });
 
