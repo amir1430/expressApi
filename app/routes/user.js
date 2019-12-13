@@ -26,15 +26,24 @@ route.post('/user', async (req, res, next) => {
 
     var x = await db.collection('users')
         .insertOne(name);
-//     console.log(x);
+    console.log(x);
     if (!x) return res.status(404).json({ result: 'not found' });
 
     res.status(201).json({ "result": 'user add :)' });
 
 });
 
-route.put('/user', (req, res, next) => {
-    res.status(200).json({ "method": req.method });
+route.put('/user', async (req, res, next) => {
+    const user = { username: req.body.username };
+
+
+    var x = await db.collection('users')
+        .findOne(user);
+
+    console.log(x);
+    if (!x) return res.status(404).json({ result: 'not found' });
+
+    res.status(200).json({ "method": x });
 });
 
 route.delete('/user', (req, res, next) => {
