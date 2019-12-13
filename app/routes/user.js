@@ -35,19 +35,41 @@ route.post('/user', async (req, res, next) => {
 
 route.put('/user', async (req, res, next) => {
     const user = { username: req.body.username };
-
+    const changeUser = { changeUser: req.body.changeUser };
 
     var x = await db.collection('users')
         .findOne(user);
 
-    console.log(x);
+    if (x) {
+        await db.collection('users').updateOne(
+            { '_id': x._id },
+            { $set: { "username": changeUser.changeUser } }
+            , function (err, res) {
+                if (err) throw err;
+                console.log("1 document updated");
+            }
+        );
+    }
     if (!x) return res.status(404).json({ result: 'not found' });
 
-    res.status(200).json({ "method": x });
+    res.status(200).json({ "result": `user \'${user.username}\' updated to \'${changeUser.changeUser}\'` });
 });
 
-route.delete('/user', (req, res, next) => {
-    res.status(200).json({ "method": req.method });
+route.delete('/user', async (req, res, next) => {
+    const user = { username: req.body.username };
+
+    var x = await db.collection('users')
+        .findOne(user);
+    if (x) {
+        await db.collection('users').deleteOne(user,
+            function (err, res) {
+                if (err) throw err;
+                console.log("1 document deleted");
+            });
+    }
+    if (!x) return res.status(404).json({ result: 'not found' });
+
+    res.status(200).json({ "result": `user \'${user.username}\'` });
 });
 
 
