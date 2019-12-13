@@ -26,7 +26,7 @@ route.post('/user', async (req, res, next) => {
 
     var x = await db.collection('users')
         .insertOne(name);
-    console.log(x);
+//     console.log(x);
     if (!x) return res.status(404).json({ result: 'not found' });
 
     res.status(201).json({ "result": 'user add :)' });
