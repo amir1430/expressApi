@@ -30,10 +30,7 @@ route.post('/user', async (req, res, next) => {
     } else {
         return res.status(404).json({ result: `user ${name.username} exist` });
     }
-
-    if (x)
-
-        res.status(201).json({ "result": 'user add :)' });
+    res.status(201).json({ "result": 'user add :)' });
 
 });
 
