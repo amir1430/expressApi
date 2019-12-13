@@ -16,7 +16,6 @@ route.get('/user', async (req, res, next) => {
             items.push(docs);
 
         });
-
     res.status(200).json({ res: items });
 });
 
@@ -28,11 +27,13 @@ route.post('/user', async (req, res, next) => {
     if (!x) {
         await db.collection('users')
             .insertOne(name);
+    } else {
+        return res.status(404).json({ result: `user ${name.username} exist` });
     }
 
-    if (x) return res.status(404).json({ result: `user ${name.username} exist` });
+    if (x)
 
-    res.status(201).json({ "result": 'user add :)' });
+        res.status(201).json({ "result": 'user add :)' });
 
 });
 
@@ -44,7 +45,7 @@ route.put('/user', async (req, res, next) => {
         .findOne(user);
 
     if (x) {
-        await db.collection('users').updateOne(
+        db.collection('users').updateOne(
             { '_id': x._id },
             { $set: { "username": changeUser.changeUser } }
             , function (err, res) {
@@ -52,8 +53,10 @@ route.put('/user', async (req, res, next) => {
                 console.log("1 document updated");
             }
         );
+    } else {
+        return res.status(404).json({ result: `user \'${user.username}\' not exist` });
     }
-    if (!x) return res.status(404).json({ result: `user \'${user.username}\' not exist` });
+
 
     res.status(200).json({ "result": `user \'${user.username}\' changed to \'${changeUser.changeUser}\'` });
 });
@@ -64,29 +67,17 @@ route.delete('/user', async (req, res, next) => {
     var x = await db.collection('users')
         .findOne(user);
     if (x) {
-        await db.collection('users').deleteOne(user,
+        db.collection('users').deleteOne(user,
             function (err, res) {
                 if (err) throw err;
                 console.log("1 document deleted");
             });
+    } else {
+        return res.status(404).json({ result: 'not found' });
     }
-    if (!x) return res.status(404).json({ result: 'not found' });
+
 
     res.status(200).json({ "result": `user \'${user.username}\'` });
 });
 
-
 module.exports = route;
-
-
-
- // var x = users.findIndex(c => c.name === req.body.name);
-    // console.log(x);
-
-
-       // const x = users.find(c => c.name === req.body.name);
-    // const index = users.indexOf(x);
-    // if (!x) return res.status(404).json({ result: 'not found' });
-
-    // users.splice(index, 1);
-    // console.log(x);
